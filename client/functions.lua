@@ -1,4 +1,5 @@
 require("config")
+lib.locale()
 ---------------- Framework initialize ----------------
 --[[
     This section initializes the framework (ESX or ND or QBCore or QBox) based on the Config settings.
