@@ -20,9 +20,4 @@ server_scripts {
     'server/events.lua',
 }
 
-ox_libs {
-	'notify',
-	'progressBar',
-}
-
 lua54 'yes'
