@@ -156,6 +156,19 @@ end
 ]]--
 if Cfg.FrameWork == 'esx' then
     ESX = exports["es_extended"]:getSharedObject()
+    FW = 'esx'
+
+    function CheckJob(src)
+        local Player = ESX.GetPlayerFromId(src)
+        if Player then
+            Job = Player.job.name
+            Grade = Player.job.grade
+            return Job, Grade
+        else
+            debug(Cfg.Debug, "Wizard Lib", "Can't get the job information of player with id " .. src)
+            return "unemployed", "0"
+        end
+    end
 elseif Cfg.FrameWork == 'nd' then
     local nd_core = exports["ND_Core"]
 
@@ -168,8 +181,47 @@ elseif Cfg.FrameWork == 'nd' then
             return self[index]
         end
     })
+    FW = 'nd'
+
+    function CheckJob(src)
+        local Player = NDCore.getPlayer(src)
+        if Player then
+            Job = Player.job
+            Grade = Player.jobInfo.rank
+            return Job, Grade
+        else
+            return "unemployed", "0"
+        end
+    end
 else
     QBCore = exports['qb-core']:GetCoreObject()
+    FW = 'qbcore'
+
+    function CheckJob(src)
+        Player = QBCore.Functions.GetPlayer(src)
+        if Player then
+            Job = Player.PlayerData.job.name
+            Grade = Player.PlayerData.job.grade.level
+            return Job, Grade
+        else
+            debug(Cfg.Debug, "Wizard Lib", "Can't get the job information of player with id " .. src)
+            return "unemployed", "0"
+        end
+    end
+end
+
+
+---------------- Notification ----------------
+--[[
+    Notify function for sending messages to the player using the configured notification system.
+    This function supports multiple notification resources (wizard-notify, okokNotify, qbx_core, qb, esx_notify, ox_lib).
+    It will automatically use the one selected in your Cfg.Notify setting.
+    Params:
+        message (string): The message to display to the player.
+        type (string): The type of notification (e.g., "success", "error", "info", "warning").
+]]--
+function Notify(src, script, message, type, defIcon)
+    TriggerClientEvent('wizard-tracker:client:notify', src, script, message, type, defIcon)
 end
 
 
@@ -199,6 +251,51 @@ AddEventHandler('wizard-lib:server:hasPerm', function(cbId, perm)
     local perm = hasPerm(src, perm)
     TriggerClientEvent('wizard-lib:client:hasPermCallback', src, cbId, perm)
 end)
+
+
+---------------- Check Inventory For Item ----------------
+--[[
+    Checks if the player has a specific inventory item, depending on the configured inventory system.
+    Supports: ox_inventory, codem-inventory, qs-inventory, qb-core, es_extended.
+    Returns true if the item is found, false otherwise.
+    @param item (string): The item name to check for.
+    @return (boolean): True if the player has the item, false otherwise.
+]]--
+function checkInventoryItem(id, item)
+    local hasItem = false
+    if Cfg.InventoryScript == 'ox' then
+        hasItem = exports.ox_inventory:Search(id, 'count', item) > 0
+    elseif Cfg.InventoryScript == 'codem' then
+        hasItem = exports['codem-inventory']:HasItem(id, item, 1)
+    elseif Cfg.InventoryScript == 'quasar' then
+        local PlayerInv = exports['qs-inventory']:GetInventory(id)
+        for _, itemData in pairs(PlayerInv) do
+            if itemData.name == item and itemData.amount > 0 then
+                hasItem = true
+                break
+            end
+        end
+    elseif Cfg.InventoryScript == 'qb' then
+        QBCore = exports['qb-core']:GetCoreObject()
+        local Player = QBCore.Functions.GetPlayer(id)
+        for _, v in pairs(Player.items) do
+            if v.name == item then
+                hasItem = true
+                break
+            end
+        end
+    elseif Cfg.InventoryScript == 'esx' then
+        ESX = exports['es_extended']:getSharedObject()
+        local inventory = ESX.GetPlayerFromId(id).inventory
+        for _, v in pairs(inventory) do
+            if v.name == item and v.count > 0 then
+                hasItem = true
+                break
+            end
+        end
+    end
+    return hasItem
+end
 
 
 ---------------- Inventory initialize ----------------
@@ -243,4 +340,22 @@ elseif Cfg.InventoryScript == 'esx' then
             end
         end)
     end
+end
+
+
+---------------- Inventory initialize ----------------
+function GetPlayersByJob(jobName, requesterJob, requesterGrade)
+    local players = {}
+    for _, playerId in pairs(GetPlayers()) do
+        local playerJob, playerGrade = CheckJob(playerId)
+        local playerName = GetPlayerName(playerId)
+
+        if playerJob == jobName then
+            table.insert(players, {id = playerId, job = playerJob, grade = playerGrade, name = playerName})
+        elseif Config.AllowedJobs[requesterJob] and Config.AllowedJobs[requesterJob].TrackOthers then
+            -- If allowed to track others, include players with other jobs
+            table.insert(players, {id = playerId, job = playerJob, grade = playerGrade, name = playerName})
+        end
+    end
+    return players
 end

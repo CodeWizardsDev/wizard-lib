@@ -149,6 +149,21 @@ end)
 
 
 
+---------------- Permission Checker ----------------
+--[[
+    @param serverId (number): The server ID of the player.
+]]--
+function GetPedFromServerId(serverId)
+    local playerId = GetPlayerFromServerId(serverId) -- Get the player ID from the server ID
+    if playerId ~= -1 then -- Check if the player ID is valid
+        return GetPlayerPed(playerId) -- Return the Ped ID
+    else
+        return nil -- Return nil if the player ID is not valid
+    end
+end
+
+
+
 ---------------- Check Script Status ----------------
 --[[
     Checks for script updates and notifies the player in chat.
