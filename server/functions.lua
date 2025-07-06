@@ -113,7 +113,7 @@ function checkVersion(resourceName, logo, prefix, latestVersionUrl, changelogUrl
     local currentVersion = GetResourceMetadata(resourceName, "version", 0)
     local latestVersion = fetchUrl(latestVersionUrl)
 
-    local logo2 = (logo .. "\n\nCodeWizards Version Checker\n")
+    local logo2 = (logo .. "\n\n                 CodeWizards Version Checker\n")
     
     if not latestVersion then
         print(logo2 .. "\n\n^7[^6" .. prefix .. "^7] ^8Failed to fetch latest version info.\n")

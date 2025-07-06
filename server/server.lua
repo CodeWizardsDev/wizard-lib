@@ -11,6 +11,6 @@ local luaFileNames = {'client/events.lua', 'client/functions.lua', 'client/ini.l
 
 AddEventHandler('onResourceStart', function(resourceName)
     if resourceName == GetCurrentResourceName() then
-        checkVersion("wizard-lib", "^3\n\n\n\n       ░█──░█ ─▀─ ▀▀█ █▀▀█ █▀▀█ █▀▀▄ 　 ░█─── ─▀─ █▀▀▄ \n       ░█░█░█ ▀█▀ ▄▀─ █▄▄█ █▄▄▀ █──█ 　 ░█─── ▀█▀ █▀▀▄ \n       ░█▄▀▄█ ▀▀▀ ▀▀▀ ▀──▀ ▀─▀▀ ▀▀▀─ 　 ░█▄▄█ ▀▀▀ ▀▀▀─", "Wizard LIB", "https://raw.githubusercontent.com/CodeWizardsDev/wizard-lib/refs/heads/main/version.txt", "https://raw.githubusercontent.com/CodeWizardsDev/wizard-lib/refs/heads/main/changelog.txt", luaFileNames)
+        checkVersion("wizard-lib", "^3\n\n\n\n               ░█──░█ ─▀─ ▀▀█ █▀▀█ █▀▀█ █▀▀▄ 　 ░█─── ─▀─ █▀▀▄ \n               ░█░█░█ ▀█▀ ▄▀─ █▄▄█ █▄▄▀ █──█ 　 ░█─── ▀█▀ █▀▀▄ \n               ░█▄▀▄█ ▀▀▀ ▀▀▀ ▀──▀ ▀─▀▀ ▀▀▀─ 　 ░█▄▄█ ▀▀▀ ▀▀▀─", "Wizard LIB", "https://raw.githubusercontent.com/CodeWizardsDev/wizard-lib/refs/heads/main/version.txt", "https://raw.githubusercontent.com/CodeWizardsDev/wizard-lib/refs/heads/main/changelog.txt", luaFileNames)
     end
 end)
