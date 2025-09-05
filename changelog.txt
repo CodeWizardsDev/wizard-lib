@@ -1,3 +1,0 @@
-1.2.6
-
-Multi Job support added! now you can set multiple allowed jobs to service vehicles
