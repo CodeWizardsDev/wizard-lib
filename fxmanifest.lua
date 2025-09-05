@@ -3,29 +3,33 @@ games { 'gta5' }
 
 author 'The_Hs5'
 
-description 'Library for my FIVEM scripts:)'
-version '1.1.0'
+description 'Display vehicle mileage, Service vehicle'
+version '1.2.6'
+ui_page 'html/index.html'
+
+dependency {'wizard-lib', 'oxmysql', 'ox_lib'}
 
 shared_scripts {
 	'@ox_lib/init.lua',
-    'config.lua'
+	'config/config.lua'
 }
 
 client_scripts {
-    'client/functions.lua',
-    'client/events.lua',
-    'client/ini.lua'
+	'@wizard-lib/client/functions.lua',
+    'client.lua'
 }
 
 server_scripts {
-    'server/functions.lua',
-    'server/events.lua',
-    'server/server.lua',
-    'server/ini.lua'
+	'@wizard-lib/server/functions.lua',
+    'server.lua'
 }
 
 files {
-    'locales/*.json'
+    'locales/*.json',
+    'config/ui_config.json',
+    'html/index.html',
+    'html/style.css',
+    'html/script.js'
 }
 
 lua54 'yes'
